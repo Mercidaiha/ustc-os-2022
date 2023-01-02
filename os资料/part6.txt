@@ -1,0 +1,111 @@
+进程调度：
+	为什么要调度？
+		进程执行：cpu执行+i/o
+		cpu burst分布
+		i/o burst           cpu利用率+响应时延（交互式）
+	cpu利用率：多道程序+多任务（分时）-> 多进程，就需要调度
+进程生命期（状态转换）new ready = running terminate
+					|      |
+					waiting（block）
+进程调度：就绪态 = 运行态 选择（短时调度/cpu调度）
+	什么是长时调度？外存->内存（任务调度）
+	时机？
+	问题？上下文切换，决策（标准+算法），典型场景，评估
+上下文切换：
+	上下文是什么？进程的所有状态（寄存器+目前的pc）
+	切换：保存+恢复
+	开销（性能）=>减少上下文切换状态次数
+
+
+调度算法：
+1.抢占/非抢占preemptive
+不抢占:开销小（时延小Because the task is running without others’ interruption）
+	用户体验差，多任务性差
+抢占：交互性好，开销大（来回切换，
+	Bad for systems that emphasize the time in finishing tasks.）
+2.多核/实时
+3.性能指标
+	cpu利用率
+	吞吐（吞吐率：流水线完成时间，单位时间执行命令的个数）
+	周转时间（等待+运行时间）
+	响应时间（响应时间是一次，等待是累加时间）
+	（两个时间的平均值/还有尾延迟）
+
+算法输入
+	就绪态进程+到达时间+cpu需求->离线/在线
+	输出：调度顺序+性能
+fcfs first come first served（不允许抢占）
+	思想：按到达时间
+	权衡（trade off）刻画：Gantt图
+	公开性，等待时间长（依赖到达顺序），尾延迟问题
+shoutest-job first（non-preemptive）
+	思想：cpu需求少优先
+	非抢占
+	抢占：多于到达进程可抢占（调度时的cpu需求）
+		*最短剩余时间优先（调度时对各进程对cpu的需求时间排序）
+		执行被打散：上下文切换
+		cpu需求未知：预测
+			基于指数平均的预测
+				思想：历史+相似
+round-robin
+	解决响应时延问题
+	思想：分时+基于抢占
+           |
+		时间片
+	tradeoff（缺点）：等待上下文切换
+	设计时间长度80% CPU burst should be shorter than the time quantum
+优先权调度（priority scheduling）
+	思想：
+	看成特例（fcfs，sjf）
+	tradeoff:等待时间=>aging（动态调节）
+
+多队列+优先级
+	组合上述几种算法（多个队列）
+	用法:
+		提交任务时决定将任务放入哪个队列（分配权限/权重）
+		选择（从高到低）：高优先级（最好放执行时间短，并且重要的任务）
+		允许抢占（preemptive）
+	problem：
+		固定的优先级
+		无限阻塞或者饿死
+	解决：带反馈（feedback）的多级队列
+		权限调节（在队列间移动）
+		用法：因数 队列个数，基础算法，权重定义
+	性能，公平性，策略
+
+实时系统调度（Real-time CPU Scheduling）
+	问题：时延要求（硬/软）
+	目标：响应时延  <= 优先权 抢占+系统
+	算法：
+		输入问题：到达时间（p，速率1/p）
+				cpu需求：t   t<p（需要保证）
+		
+1.速率单调算法Rate monotonic scheduling
+	思想：根据速率调度
+	执行：速率大的权重高，允许抢占
+	不能永远满足，原因：优先级设计
+	Can not guarantee that a set of processes can be scheduled
+2.deadline算法Earliest-deadline-first scheduling (EDF)
+	问题：只关注deadline（即最紧迫的任务）
+	思想：最紧迫的任务先执行
+	特点：允许抢占+权重变化
+	EDF requires the announcement of deadlines
+
+
+多核   	NUMA架构 非均匀内存访问
+	SMP: Each processor may have its private queue of ready processes
+	内存访问：
+	迁移开销：
+	多和性？
+
+linux调度器
+	实时/非实时 => 多级队列
+	cfs：优先级（正使用资源）Completely Fair Scheduler
+	
+
+
+
+
+	
+
+	

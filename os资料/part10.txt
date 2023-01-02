@@ -1,0 +1,57 @@
+layout:FAT/EXT
+FAT:目录（条目结构，FAT实际实现）
+EXT：layout（Index-node分配 and 优化）（分组：可靠性+性能）
+	DS：GDT-GROUP（每个分组）+ bitmaps
+	目录/Index
+		index结构：数据块地址（定长处理）15B
+									=>不含文件名
+				额外（文件属性）128B
+		目录结构：目录条目（文件名+index）          对比FAT的目录结构
+				结构，链表
+				目录访问
+链接文件（link file）
+	In（In-s）创建链接文件 => 硬链接/符号链接（软链接）
+	硬链接：创建新的文件名 但还是原来的 inode（文件内容没有变）
+		 效果：同一个文件，有两个不同的路径
+		 信息维护：link count（放在inode里）
+		文件创建/目录创建 -> link count
+		   |       |
+		   1		 2 and 其父目录的link count+1
+		删除文件 => 删除目录条目（父目录中的） link count -1
+				unlink()	The system call that removing a file
+					when the link count == 0， then the space allocated will be 回收
+		符号链接：In -s
+			本质：会创建新的inode => 创建快捷方式（存的是path）
+			路径的存储：复用inode域或者数据块
+
+小结：是否创建inode => link count
+
+buffer cache：
+
+	性能：（1）open file table （2）缓存
+	内容：数据块 inode 目录 => LRU
+	读/写缓存设计
+		读：readahead
+		写：Write-through （写穿透）
+		   Write-back（写返回）
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

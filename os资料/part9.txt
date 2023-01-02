@@ -1,0 +1,47 @@
+文件系统（FS）介绍
+	访问流程：库函数-> 系统调用 -> FS操作 -> 硬件
+	核心问题：布局（layout）是什么，在哪what and where 操作（OS知道FS layout）
+	总结：OS与FS
+首先：OS不等同于FS
+	OS支持FS
+其次：storage device不等同于FS
+	A FS must be stored on a device.
+	A storage device is only a dummy container.
+数据存储/计算 -> 持久化+共享 -> 文件
+文件：统一逻辑视图（信息存储单元/数据类型）
+	不同类型（type）----属性----操作
+	文件信息：
+		文件内容和名字（父目录内容）属性
+		权限：775、664
+			3组（3 bits/组）三种权限（读，写，执行）
+	根据文件名查找
+		依赖路径名：唯一
+		文件的操作：
+			fopen
+				file descriptor and a buffer（内存拷贝至os）
+				fileno（）文件描述符，整数
+				需求：问题：经常搜索文件（目录遍历）---性能好吗？
+		=====open：打开--“缓存（打开文件表）”--多次访问（除首次，可根据文件描述符在文件表取）--关闭
+			打开文件表设计：fd
+			read/write流程
+				写：缓存（用户数据）（之后会有流程将数据从缓存存到外存，实现持久化） 性能
+	目录？
+		本质：文件（内容+属性）
+			目录文件一定有内容，若干个子目录，条目（文件名，属性）
+			属性：不一定，依赖于文件系统的设计
+			目录的遍历：
+				例子：/bin/ls
+					/（文件，内容）-bin（文件，内容）-----ls
+			file create的本质：Update of the directory file
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+

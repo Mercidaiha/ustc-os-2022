@@ -1,0 +1,77 @@
+存储层次：
+内存：字节可寻址
+	cpu访问地址
+多任务
+内存管理内容：用户空间管理+内核
+用户空间内存管理=>地址空间
+分段：
+	代码段
+	数据段
+	堆
+	栈
+地址范围多大？
+	32bit寻址~4G
+代码段：
+	代码+常量
+	Codes and constants are both read-only.
+数据段：变量
+	bss	（Block Started by Symbol）未初始化
+	注意：除内核外，留给用户空间的大小大概是3G左右，开太大的数组将造成segmentation fault
+栈：
+堆：
+	动态分配内存
+	使用malloc/free
+		|
+	system call brk（）
+	空间如何管理：
+		数据结构：
+	数据：初始化了的全局或静态
+			分配效率
+			记录分配空间（指针）
+			空间使用率
+
+		空闲链表：记录释放内存
+		重用设计
+	隐式空闲链表：
+		分配算法：   1.first fit第一次找到能满足需求的空间段
+				优点：快
+				缺点：碎片化
+				2.next fit
+				3.best fit（allocate the smallest hole that is big enough）
+				4.worst fit（ allocate the largest hole）
+		释放：合并（尾部）头部合并（footer）
+
+
+显示链表：
+	增加指针形成链表：fifo队头，地址顺序
+	块分割
+	前后合并
+分离空闲链表
+	大小分类：根据需求，访问特征
+	碎片化
+
+
+Buddy system（伙伴系统）
+	保证内存连续（以便一分为二）
+	保证碎片化小
+
+OOM（run out of memory）内存不够
+	堆的大小空间(大概3g
+	分配逻辑空间 => 并不代表分配了物理空间
+	延迟分配
+
+
+外部碎片化：通常可通过利用率来估计（这个可以不考虑内部碎片化）
+（内部碎片化是由于需求小于空闲空间大小，造成碎片化）
+
+segmentation fault
+非法访问
+1.未使用，访问
+2.只读数据，进行修改
+3.未分配，访问
+
+
+
+
+
+

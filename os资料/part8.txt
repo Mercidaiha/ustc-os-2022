@@ -1,0 +1,79 @@
+disk
+	结构：柱面->轨道->扇区（512）
+	访问：寻道（轨道）+ 旋转速度（扇区）
+			|
+		调度+盘内部
+	数据记录：
+		数据结构一样-> 旋转速度不同（固定线速度）
+		数据结构不一样-> 旋转速度一样（固定角速度）
+	如何用：
+		柱面->轨道->扇区 ------ 1D地址空间 LBA      映射
+		管理: 坏块 + 格式化
+			  |
+			预留空间：预留+转化（重映射）-> 柱面内预留------对调度算法有影响
+				    滑动（数据移动）
+		格式化：
+			物理（低级）
+			逻辑（FS）：分区 => RAW DISK
+		调度：
+			目标：使得寻道时间最小（磁头移动的柱面数）
+			输入输出
+			FCFS
+				思想：按序处理->大幅摆动->寻道时间长
+			SSTF
+				最短寻道时间（最近请求优先）：“局部最优” -> 饥饿
+			如何改进尾延迟：
+				电梯算法（SCAN）“来回扫描”+走到两端------不会存在一个请求等很久的情况，最长一个周期
+					存在问题：一端可能会堆积更高的密度（磁头一端请求密度过大）
+				C-SCAN：单向
+				C-LOOK：看两端，不是盲目移到两端终点，看当前队列请求情况，决定需要移动到哪
+
+		SSD（固态硬盘）
+			内部结构
+			相比HDD区别：block（大概64pages）-page（4k）
+					访问流程：多层级并行
+							可靠性
+							异地写（写，擦除erase）
+							
+		FTL：flash translation layer
+			地址映射：
+				Sector mapping:4t/4k-----以page为粒度的映射，映射表大
+				Block mapping：4t/4k*64，更换page时，要换整个block（先erase，再write）
+				混合Hybrid mapping：
+					First use block mapping, then use sector mapping in each block
+					缺点：Longer time to identify the location of a page
+				Log-structured mapping：
+					Data blocks: block mapping
+					Log blocks: sector mapping 日志块
+
+
+RAID（EC）Redundant Array of Inexpensive (independent) Disks磁盘阵列
+概念：“独立”
+RAID方法：性能---可靠性---成本
+	RAID 0： Block-level striping无冗余----可靠性不高（MTTF）
+	RAID 1：复刻
+	组合：RAID01 RAID10
+
+RAID4:校验Parity 异或
+	问题（性能）：校验盘瓶颈->parity分散，写开销（RMW，RRW）-> 日志
+
+RAID5：校验循环放置 => 不容多错
+RAID6：容两错=>Q计算
+XOR-based 编码
+
+
+问题：
+写开销
+修复性能
+
+
+
+
+
+
+
+
+
+
+
+
